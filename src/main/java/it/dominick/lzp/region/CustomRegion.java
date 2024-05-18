@@ -46,8 +46,8 @@ public class CustomRegion extends Cuboid {
             return null;
         }
 
-        boolean restrictedX = regionSet.getRegions().stream().allMatch(region -> region.contains(from.getBlockX() + changeX, from.getBlockY(), from.getBlockZ()));
-        boolean restrictedZ = regionSet.getRegions().stream().allMatch(region -> region.contains(from.getBlockX(), from.getBlockY(), from.getBlockZ() + changeZ));
+        boolean restrictedX = regionSet.getRegions().values().stream().allMatch(region -> region.contains(from.getBlockX() + changeX, from.getBlockY(), from.getBlockZ()));
+        boolean restrictedZ = regionSet.getRegions().values().stream().allMatch(region -> region.contains(from.getBlockX(), from.getBlockY(), from.getBlockZ() + changeZ));
 
         double knockbackX = restrictedX ? Math.signum(changeX) : 0;
         double knockbackY = -0.5;

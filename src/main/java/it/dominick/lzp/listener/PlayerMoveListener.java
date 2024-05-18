@@ -29,8 +29,8 @@ public class PlayerMoveListener implements Listener {
             return;
         }
 
-        CustomRegion fromRegion = (CustomRegion) regionManager.getRegion(from);
-        CustomRegion toRegion = (CustomRegion) regionManager.getRegion(to);
+        CustomRegion fromRegion = regionManager.getRegion(from);
+        CustomRegion toRegion = regionManager.getRegion(to);
 
         if (toRegion != null && toRegion != fromRegion) {
             if (!toRegion.canEnter(player)) {

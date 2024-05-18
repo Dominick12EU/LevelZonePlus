@@ -16,16 +16,11 @@ public final class LevelZonePlus extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        RegionManager regionManager = new RegionManager();
+        RegionManager regionManager = new RegionManager(this);
 
         getServer().getPluginManager().registerEvents(new PlayerMoveListener(regionManager), this);
         getServer().getPluginManager().registerEvents(new RegionJoinListener(), this);
         getServer().getPluginManager().registerEvents(new RegionQuitListener(), this);
-
-        Location loc1 = new Location(getServer().getWorld("world"), 100, 64, 100);
-        Location loc2 = new Location(getServer().getWorld("world"), 200, 80, 200);
-        CustomRegion customRegion = new CustomRegion(loc1, loc2);
-        regionManager.addRegion(customRegion);
     }
 
     @Override
