@@ -1,0 +1,5 @@
+name: LevelZonePlus
+version: '${version}'
+main: it.dominick.lzp.LevelZonePlus
+api-version: '1.13'
+authors: [Dominick12]
