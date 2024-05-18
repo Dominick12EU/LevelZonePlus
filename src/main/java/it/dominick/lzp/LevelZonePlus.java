@@ -1,6 +1,8 @@
 package it.dominick.lzp;
 
 import it.dominick.lzp.listener.PlayerMoveListener;
+import it.dominick.lzp.listener.RegionJoinListener;
+import it.dominick.lzp.listener.RegionQuitListener;
 import it.dominick.lzp.region.CustomRegion;
 import it.dominick.lzp.region.manager.RegionManager;
 import org.bukkit.Location;
@@ -17,6 +19,8 @@ public final class LevelZonePlus extends JavaPlugin {
         RegionManager regionManager = new RegionManager();
 
         getServer().getPluginManager().registerEvents(new PlayerMoveListener(regionManager), this);
+        getServer().getPluginManager().registerEvents(new RegionJoinListener(), this);
+        getServer().getPluginManager().registerEvents(new RegionQuitListener(), this);
 
         Location loc1 = new Location(getServer().getWorld("world"), 100, 64, 100);
         Location loc2 = new Location(getServer().getWorld("world"), 200, 80, 200);

@@ -41,15 +41,17 @@ public class PlayerMoveListener implements Listener {
         }
 
         if (fromRegion != null && !fromRegion.equals(toRegion)) {
-            fromRegion.onExit();
-            fromRegion.handlePlayerExit(player);
             Bukkit.getPluginManager().callEvent(new RegionQuitEvent(event.getPlayer(), fromRegion));
         }
 
         if (toRegion != null && !toRegion.equals(fromRegion)) {
-            toRegion.onEnter();
-            toRegion.handlePlayerEntry(player);
-            Bukkit.getPluginManager().callEvent(new RegionJoinEvent(event.getPlayer(), toRegion));
+            RegionJoinEvent joinEvent = new RegionJoinEvent(player, toRegion);
+            Bukkit.getPluginManager().callEvent(joinEvent);
+
+            if (joinEvent.isCancelled()) {
+                toRegion.denyEntry(player);
+                player.setVelocity(toRegion.calculateKnockbackVector(from, to, regionManager));
+            }
         }
     }
 }
