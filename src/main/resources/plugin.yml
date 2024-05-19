@@ -3,3 +3,8 @@ version: '${version}'
 main: it.dominick.lzp.LevelZonePlus
 api-version: '1.13'
 authors: [Dominick12]
+
+commands:
+  lzp:
+    aliases: ["lz", "levelzone", "levelzoneplus"]
+    description: Main command

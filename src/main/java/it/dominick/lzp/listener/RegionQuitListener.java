@@ -9,7 +9,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 public class RegionQuitListener implements Listener {
-
     @EventHandler
     public void onRegionJoin(RegionQuitEvent event) {
         Player player = event.getPlayer();

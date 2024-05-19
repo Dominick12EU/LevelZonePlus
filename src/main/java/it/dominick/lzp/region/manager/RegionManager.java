@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import it.dominick.lzp.LevelZonePlus;
 import it.dominick.lzp.region.CustomRegion;
 import it.dominick.lzp.region.RegionData;
+import lombok.Getter;
 import org.bukkit.Location;
 
 import java.io.*;
@@ -13,6 +14,7 @@ import java.util.Map;
 
 public class RegionManager {
 
+    @Getter
     private final Map<String, CustomRegion> regions = new HashMap<>();
     private final File regionsFolder;
     private final Gson gson;
@@ -71,7 +73,4 @@ public class RegionManager {
         }
     }
 
-    public Map<String, CustomRegion> getRegions() {
-        return regions;
-    }
 }

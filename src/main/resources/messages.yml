@@ -1,0 +1,4 @@
+global:
+  wrong-command-syntax: "&cIncorrect command syntax, Use %command%"
+  insufficient-permission: "&cYou don't have the right permissions"
+  no-console: "&cOnly player players can execute this command"

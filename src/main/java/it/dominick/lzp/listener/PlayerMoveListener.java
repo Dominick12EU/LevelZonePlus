@@ -4,6 +4,7 @@ import it.dominick.lzp.event.RegionJoinEvent;
 import it.dominick.lzp.event.RegionQuitEvent;
 import it.dominick.lzp.region.CustomRegion;
 import it.dominick.lzp.region.manager.RegionManager;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -11,13 +12,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
+@RequiredArgsConstructor
 public class PlayerMoveListener implements Listener {
 
     private final RegionManager regionManager;
-
-    public PlayerMoveListener(RegionManager regionManager) {
-        this.regionManager = regionManager;
-    }
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
