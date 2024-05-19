@@ -30,12 +30,10 @@ public class PlayerMoveListener implements Listener {
         CustomRegion fromRegion = regionManager.getRegion(from);
         CustomRegion toRegion = regionManager.getRegion(to);
 
-        if (toRegion != null && toRegion != fromRegion) {
-            if (!toRegion.canEnter(player)) {
-                toRegion.denyEntry(player);
-                player.setVelocity(toRegion.calculateKnockbackVector(from, to, regionManager));
-                return;
-            }
+        if (toRegion != null && toRegion != fromRegion && !toRegion.canEnter(player)) {
+            toRegion.denyEntry(player);
+            player.setVelocity(toRegion.calculateKnockbackVector(from, to, regionManager));
+            return;
         }
 
         if (fromRegion != null && !fromRegion.equals(toRegion)) {

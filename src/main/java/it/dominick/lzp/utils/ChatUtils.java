@@ -13,17 +13,16 @@ public class ChatUtils {
 
     public static void send(Player player, String message, String... placeholders) {
         if (placeholders.length % 2 == 0) {
+            String modifiedMessage = message;
             for (int i = 0; i < placeholders.length; i += 2) {
                 String placeholder = placeholders[i];
                 String replacement = placeholders[i + 1];
-                message = message.replace(placeholder, replacement);
+                modifiedMessage = modifiedMessage.replace(placeholder, replacement);
             }
+            send(player, modifiedMessage);
         } else {
             send(player, "&cErrore: I placeholder devono essere forniti in coppia.");
-            return;
         }
-
-       send(player, message);
     }
 
     public static void send(CommandSender sender, String message) {

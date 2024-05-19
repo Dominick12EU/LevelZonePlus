@@ -5,8 +5,12 @@ import org.bukkit.Location;
 public abstract class Cuboid {
     protected Location min;
     protected Location max;
-    protected int minX, minY, minZ;
-    protected int maxX, maxY, maxZ;
+    protected int minX;
+    protected int minY;
+    protected int minZ;
+    protected int maxX;
+    protected int maxY;
+    protected int maxZ;
 
     public Cuboid(Location point1, Location point2) {
         this.min = new Location(point1.getWorld(),
