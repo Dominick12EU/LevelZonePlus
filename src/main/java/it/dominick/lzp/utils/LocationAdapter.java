@@ -23,7 +23,9 @@ public class LocationAdapter extends TypeAdapter<Location> {
     public Location read(JsonReader in) throws IOException {
         in.beginObject();
         String world = "";
-        double x = 0, y = 0, z = 0;
+        double x = 0;
+        double y = 0;
+        double z = 0;
         while (in.hasNext()) {
             switch (in.nextName()) {
                 case "world":
@@ -37,6 +39,9 @@ public class LocationAdapter extends TypeAdapter<Location> {
                     break;
                 case "z":
                     z = in.nextDouble();
+                    break;
+                default:
+                    in.skipValue();
                     break;
             }
         }

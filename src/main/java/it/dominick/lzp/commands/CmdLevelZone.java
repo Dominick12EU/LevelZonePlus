@@ -20,13 +20,11 @@ import java.util.Map;
 public class CmdLevelZone implements TabExecutor {
 
     private final ConfigManager config;
-    private final RegionManager region;
     private final Argument helpArgument;
     private final Map<String, Argument> argumentMap;
 
     public CmdLevelZone(ConfigManager config, RegionManager region) {
         this.config = config;
-        this.region = region;
         argumentMap = new HashMap<>();
 
         argumentMap.put("create", new CreateRegionArgument(config, region));
