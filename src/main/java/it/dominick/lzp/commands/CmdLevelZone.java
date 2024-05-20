@@ -2,9 +2,9 @@ package it.dominick.lzp.commands;
 
 import com.google.common.collect.ImmutableList;
 import it.dominick.lzp.LevelZonePlus;
-import it.dominick.lzp.commands.args.Argument;
-import it.dominick.lzp.commands.args.HelpArgument;
+import it.dominick.lzp.commands.args.*;
 import it.dominick.lzp.config.ConfigManager;
+import it.dominick.lzp.region.manager.RegionManager;
 import it.dominick.lzp.utils.ChatUtils;
 import it.dominick.lzp.utils.RNG;
 import org.bukkit.Sound;
@@ -20,13 +20,19 @@ import java.util.Map;
 public class CmdLevelZone implements TabExecutor {
 
     private final ConfigManager config;
+    private final RegionManager region;
     private final Argument helpArgument;
     private final Map<String, Argument> argumentMap;
 
-    public CmdLevelZone(ConfigManager config) {
+    public CmdLevelZone(ConfigManager config, RegionManager region) {
         this.config = config;
+        this.region = region;
         argumentMap = new HashMap<>();
 
+        argumentMap.put("create", new CreateRegionArgument(config, region));
+        argumentMap.put("delete", new DeleteRegionArgument(config, region));
+        argumentMap.put("pos1", new Pos1Argument(config, region));
+        argumentMap.put("pos2", new Pos2Argument(config, region));
         argumentMap.put("help", new HelpArgument(config));
 
         helpArgument = new HelpArgument(config);

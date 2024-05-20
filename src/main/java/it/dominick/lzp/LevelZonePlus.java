@@ -28,7 +28,7 @@ public final class LevelZonePlus extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new RegionJoinListener(), this);
         getServer().getPluginManager().registerEvents(new RegionQuitListener(), this);
 
-        getCommand("lzp").setExecutor(new CmdLevelZone(configManager));
+        getCommand("lzp").setExecutor(new CmdLevelZone(configManager, regionManager));
     }
 
     @Override

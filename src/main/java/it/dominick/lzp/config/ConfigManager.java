@@ -201,7 +201,11 @@ public class ConfigManager {
                 "  &#A5B1C2By Dominick12",
                 "&r",
                 " &#18D63C&lC&#33D74F&lo&#4DD963&lm&#68DA76&lm&#68DA76&la&#4DD963&ln&#33D74F&ld&#18D63C&ls",
-                "  &#BEBBB4/lzp help &#A5B1C2- &#BEBBB4Show this menu.",
+                "  &#A5B1C2/lzp help &8- &#A5B1C2Show this menu.",
+                "  &#A5B1C2/lzp pos1 &8- &#A5B1C2Set position 1.",
+                "  &#A5B1C2/lzp pos2 &8- &#A5B1C2Set position 2.",
+                "  &#A5B1C2/lzp create <name> &8- &#A5B1C2Create a region.",
+                "  &#A5B1C2/lzp delete <name> &8- &#A5B1C2Remove a region.",
                 "&r"
         );
 
