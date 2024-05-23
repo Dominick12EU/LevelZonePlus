@@ -20,6 +20,7 @@ repositories {
 dependencies {
     compileOnly "org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT"
     compileOnly 'org.projectlombok:lombok:1.18.24'
+    compileOnly files('libs/AlonsoLevels-v2.3.2-BETA.jar')
 
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
 }

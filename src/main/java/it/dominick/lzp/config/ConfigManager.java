@@ -193,19 +193,17 @@ public class ConfigManager {
 
     public void printHelp(Player player) {
         List<String> help = Arrays.asList(
-                // Main Gradient: #18D63C #75DB80 #18D63C
-                // Second Gradient: #A5B1C2
-                // Command Gradient: #BEBBB4
+                // Main Gradient: #209966 #33F342 #67CB70
                 "&r",
-                " &#18D63C&lL&#28D747&le&#37D853&lv&#47D95E&le&#56D969&ll&#66DA75&lZ&#75DB80&lo&#66DA75&ln&#56D969&le&#47D95E&lP&#37D853&ll&#28D747&lu&#18D63C&ls &#A5B1C2v" + plugin.getDescription().getVersion(),
-                "  &#A5B1C2By Dominick12",
+                " &#209966&lL&#23A860&le&#26B75A&lv&#2AC654&le&#2DD54E&ll&#30E448&lZ&#33F342&lo&#3CEC4A&ln&#44E651&le&#4DDF59&lP&#56D861&ll&#5ED268&lu&#67CB70&ls &7v" + plugin.getDescription().getVersion(),
+                "  &7By Dominick12",
                 "&r",
-                " &#18D63C&lC&#33D74F&lo&#4DD963&lm&#68DA76&lm&#68DA76&la&#4DD963&ln&#33D74F&ld&#18D63C&ls",
-                "  &#A5B1C2/lzp help &8- &#A5B1C2Show this menu.",
-                "  &#A5B1C2/lzp pos1 &8- &#A5B1C2Set position 1.",
-                "  &#A5B1C2/lzp pos2 &8- &#A5B1C2Set position 2.",
-                "  &#A5B1C2/lzp create <name> &8- &#A5B1C2Create a region.",
-                "  &#A5B1C2/lzp delete <name> &8- &#A5B1C2Remove a region.",
+                " &#209966&lC&#25B35C&lo&#2BCC51&lm&#30E647&lm&#3AED49&la&#49E256&ln&#58D663&ld&#67CB70&ls",
+                "  &7/lzp help &8- &7Show this menu.",
+                "  &7/lzp pos1 &8- &7Set position 1.",
+                "  &7/lzp pos2 &8- &7Set position 2.",
+                "  &7/lzp create <name> &8- &7Create a region.",
+                "  &7/lzp delete <name> &8- &7Remove a region.",
                 "&r"
         );
 

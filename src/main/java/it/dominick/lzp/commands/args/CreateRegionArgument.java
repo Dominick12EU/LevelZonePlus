@@ -1,10 +1,9 @@
 package it.dominick.lzp.commands.args;
 
 import it.dominick.lzp.config.ConfigManager;
-import it.dominick.lzp.region.CustomRegion;
+import it.dominick.lzp.hook.HookType;
 import it.dominick.lzp.region.manager.RegionManager;
 import it.dominick.lzp.utils.ChatUtils;
-import lombok.RequiredArgsConstructor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -38,7 +37,7 @@ public class CreateRegionArgument extends Argument {
             return;
         }
 
-        regionManager.addRegion(regionName, pos1, pos2);
+        regionManager.addRegion(regionName, pos1, pos2, HookType.DEFAULT, 0);
     }
 
     @Override

@@ -2,9 +2,11 @@ package it.dominick.lzp.region.manager;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import it.dominick.lzp.LevelZonePlus;
+import it.dominick.lzp.hook.EntryHook;
+import it.dominick.lzp.hook.EntryHookFactory;
+import it.dominick.lzp.hook.HookType;
 import it.dominick.lzp.region.CustomRegion;
 import it.dominick.lzp.region.RegionData;
 import it.dominick.lzp.utils.LocationAdapter;
@@ -13,6 +15,7 @@ import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
 
 import java.io.*;
 import java.util.HashMap;
@@ -26,8 +29,10 @@ public class RegionManager {
     private static final Map<Player, Location> playerPos2Map = new HashMap<>();
     private final File regionsFolder;
     private final Gson gson;
+    private final PluginManager pluginManager;
 
     public RegionManager(LevelZonePlus plugin) {
+        this.pluginManager = plugin.getServer().getPluginManager();
         this.regionsFolder = new File(plugin.getDataFolder(), "regions");
         if (!regionsFolder.exists()) {
             regionsFolder.mkdirs();
@@ -39,10 +44,16 @@ public class RegionManager {
         loadRegions();
     }
 
-    public void addRegion(String name, Location point1, Location point2) {
-        CustomRegion region = new CustomRegion(point1, point2);
+    public void addRegion(String name, Location point1, Location point2, HookType hookType, int minLevel) {
+        EntryHook entryHook = EntryHookFactory.createHook(hookType);
+        if (!entryHook.isValid(pluginManager)) {
+            System.err.println("Hook type " + hookType + " is not valid. Region not added.");
+            return;
+        }
+
+        CustomRegion region = new CustomRegion(point1, point2, hookType, minLevel);
         regions.put(name.toLowerCase(), region);
-        saveRegion(new RegionData(name, point1, point2));
+        saveRegion(new RegionData(name, hookType, minLevel, point1, point2));
     }
 
     public void removeRegion(String name) {
@@ -69,6 +80,10 @@ public class RegionManager {
         JsonObject jsonObject = new JsonObject();
 
         jsonObject.addProperty("name", regionData.getName());
+        JsonObject hookObject = new JsonObject();
+        hookObject.addProperty("type", regionData.getHookType().name());
+        hookObject.addProperty("min-level", regionData.getMinLevel());
+        jsonObject.add("hook", hookObject);
         jsonObject.add("pos1", gson.toJsonTree(regionData.getPoint1()));
         jsonObject.add("pos2", gson.toJsonTree(regionData.getPoint2()));
         try (Writer writer = new FileWriter(regionFile)) {
@@ -85,17 +100,22 @@ public class RegionManager {
                 try (Reader reader = new FileReader(file)) {
                     JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
                     String name = jsonObject.get("name").getAsString();
-                    JsonObject pos1Obj = jsonObject.getAsJsonObject("pos1");
-                    JsonObject pos2Obj = jsonObject.getAsJsonObject("pos2");
+                    JsonObject hookObject = jsonObject.getAsJsonObject("hook");
+                    HookType hookType = HookType.valueOf(hookObject.get("type").getAsString());
+                    int minLevel = hookObject.get("min-level").getAsInt();
+                    Location pos1 = gson.fromJson(jsonObject.get("pos1"), Location.class);
+                    Location pos2 = gson.fromJson(jsonObject.get("pos2"), Location.class);
 
-                    Location pos1 = gson.fromJson(pos1Obj, Location.class);
-                    Location pos2 = gson.fromJson(pos2Obj, Location.class);
+                    EntryHook entryHook = EntryHookFactory.createHook(hookType);
+                    if (!entryHook.isValid(pluginManager)) {
+                        System.err.println("Hook type " + hookType + " is not valid. Region " + name + " not loaded.");
+                        continue;
+                    }
 
-                    RegionData regionData = new RegionData(name, pos1, pos2);
-
-                    CustomRegion region = new CustomRegion(regionData.getPoint1(), regionData.getPoint2());
+                    RegionData regionData = new RegionData(name, hookType, minLevel, pos1, pos2);
+                    CustomRegion region = new CustomRegion(regionData.getPoint1(), regionData.getPoint2(), hookType, minLevel);
                     regions.put(regionData.getName().toLowerCase(), region);
-                    System.out.println("Loaded region: " + regionData.getName());
+                    System.out.println("Loaded region: " + regionData.getName() + " (Hook: " + regionData.getHookType() + ")");
                 } catch (FileNotFoundException e) {
                     System.err.println("File not found: " + file.getName());
                     e.printStackTrace();

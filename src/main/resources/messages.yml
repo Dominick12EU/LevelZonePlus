@@ -8,6 +8,6 @@ cmd:
   pos: "&aPosition %pos% set successfully"
   delete: "&aThe region &2%region% &ahas been removed"
   create:
-    already-exist: "&aThe &2%region% &aregion already exists"
+    already-exist: "&cThe &4%region% &cregion already exists"
     set-positions: "&cYou have to set positions 1 and 2 first using &7(/lzp pos1, /lzp pos2)"
     same-world: "&cThe two positions must be in the same world"

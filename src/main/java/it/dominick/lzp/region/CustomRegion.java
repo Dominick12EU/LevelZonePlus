@@ -1,5 +1,8 @@
 package it.dominick.lzp.region;
 
+import it.dominick.lzp.hook.EntryHook;
+import it.dominick.lzp.hook.EntryHookFactory;
+import it.dominick.lzp.hook.HookType;
 import it.dominick.lzp.region.manager.RegionManager;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -7,8 +10,13 @@ import org.bukkit.util.Vector;
 
 public class CustomRegion extends Cuboid {
 
-    public CustomRegion(Location point1, Location point2) {
+    private final EntryHook entryHook;
+    private final int requiredLevel;
+
+    public CustomRegion(Location point1, Location point2, HookType hookType, int requiredLevel) {
         super(point1, point2);
+        this.entryHook = EntryHookFactory.createHook(hookType);
+        this.requiredLevel = requiredLevel;
     }
 
     @Override
@@ -30,7 +38,7 @@ public class CustomRegion extends Cuboid {
     }
 
     public boolean canEnter(Player player) {
-        return player.getLevel() >= 5;
+        return entryHook.canEnter(player, requiredLevel);
     }
 
     public void denyEntry(Player player) {

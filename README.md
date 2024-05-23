@@ -10,7 +10,7 @@ LevelZonePlus is a complete overhaul of LevelZone aimed at enhancing all aspects
 - [x] ConfigManager
 - [ ] WorldGuard Support
 - [ ] MMOCore Support
-- [ ] AlonsoLevels Support
+- [x] AlonsoLevels Support
 - [ ] EcoSkills Support
 - [ ] AuraSkills (AureliumSkills)
 - [ ] Metrics
