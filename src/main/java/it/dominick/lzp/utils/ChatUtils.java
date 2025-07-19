@@ -4,29 +4,43 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class ChatUtils {
 
     private static final Pattern HEX_PATTERN = Pattern.compile("&#([A-Fa-f0-9]{6})");
 
-    public static void send(Player player, String message, String... placeholders) {
+    public static String placeholder(String message, String... placeholders) {
+        String modifiedMessage = message;
         if (placeholders.length % 2 == 0) {
-            String modifiedMessage = message;
             for (int i = 0; i < placeholders.length; i += 2) {
                 String placeholder = placeholders[i];
                 String replacement = placeholders[i + 1];
                 modifiedMessage = modifiedMessage.replace(placeholder, replacement);
             }
-            send(player, modifiedMessage);
         } else {
-            send(player, "&cErrore: I placeholder devono essere forniti in coppia.");
+            return null;
         }
+
+        return modifiedMessage;
+    }
+
+    public static void send(Player player, String message, String... placeholders) {
+        String modifiedMessage = placeholder(message, placeholders);
+        send(player, modifiedMessage);
     }
 
     public static void send(CommandSender sender, String message) {
         sender.sendMessage(color(message));
+    }
+
+    public static List<String> color(List<String> messages) {
+        return messages.stream()
+                .map(ChatUtils::color)
+                .collect(Collectors.toList());
     }
 
     public static String color(final String message) {

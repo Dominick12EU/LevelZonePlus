@@ -1,8 +1,10 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
 }
 
 group = 'it.dominick'
+description = 'LevelZonePlus'
 version = '2.0'
 
 repositories {
@@ -15,13 +17,18 @@ repositories {
         name = "sonatype"
         url = "https://oss.sonatype.org/content/groups/public/"
     }
+    maven {
+        url = 'https://maven.enginehub.org/repo/'
+    }
 }
 
 dependencies {
     compileOnly "org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT"
     compileOnly 'org.projectlombok:lombok:1.18.24'
+    compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.0'
     compileOnly files('libs/AlonsoLevels-v2.3.2-BETA.jar')
 
+    implementation 'dev.triumphteam:triumph-gui:3.1.2'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
 }
 
@@ -36,4 +43,10 @@ processResources {
     filesMatching('plugin.yml') {
         expand props
     }
+}
+
+shadowJar {
+    minimize()
+    archiveFileName = "${project.description}-${project.version}.jar"
+    relocate 'dev.triumphteam', 'it.dominick.lzp.libs'
 }

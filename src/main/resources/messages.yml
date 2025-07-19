@@ -1,13 +1,14 @@
 global:
-  wrong-command-syntax: "&cIncorrect command syntax, Use %command%"
-  insufficient-permission: "&cYou don't have the right permissions"
-  no-console: "&cOnly player players can execute this command"
-  no-region-found: "&cThe region &4%region% &cwas not found"
+  prefix: "&#08FB18&lLevelZone&#FF0000&lPlus &8&l»"
+  wrong-command-syntax: "{prefix} &cIncorrect command syntax, Use %command%"
+  insufficient-permission: "{prefix} &cYou don't have the right permissions"
+  no-console: "{prefix} &cOnly player players can execute this command"
+  no-region-found: "{prefix} &cThe region &4%region% &cwas not found"
 
 cmd:
-  pos: "&aPosition %pos% set successfully"
-  delete: "&aThe region &2%region% &ahas been removed"
+  pos: "{prefix} &aPosition %pos% set successfully"
+  delete: "{prefix} &aThe region &2%region% &ahas been removed"
   create:
-    already-exist: "&cThe &4%region% &cregion already exists"
-    set-positions: "&cYou have to set positions 1 and 2 first using &7(/lzp pos1, /lzp pos2)"
-    same-world: "&cThe two positions must be in the same world"
+    already-exist: "{prefix} &cThe &4%region% &cregion already exists"
+    set-positions: "{prefix} &cYou have to set positions 1 and 2 first using &7(/lzp pos1, /lzp pos2)"
+    same-world: "{prefix} &cThe two positions must be in the same world"

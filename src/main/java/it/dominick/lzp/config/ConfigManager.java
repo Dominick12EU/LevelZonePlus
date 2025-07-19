@@ -2,7 +2,7 @@ package it.dominick.lzp.config;
 
 import it.dominick.lzp.utils.ChatUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -44,52 +44,105 @@ public class ConfigManager {
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
         if (!config.getKeys(true).isEmpty()) {
-            System.out.println(config.getKeys(true).toString());
-            configCache.put(fileName, config);
+            configCache.put(baseDir + fileName, config);
         } else {
             Bukkit.getLogger().warning("File di configurazione vuoto: " + configFile.getPath());
         }
     }
 
     public String getString(String key) {
-        return (String) get("messages.yml", key);
+        return getString(ConfigFile.MESSAGES, key);
+    }
+
+    public String getString(ConfigFile configFile, String key) {
+        String string = (String) get(configFile, key);
+        String prefix = (String) get(ConfigFile.MESSAGES, "global.prefix");
+        return ChatUtils.placeholder(string, "{prefix}", prefix);
+    }
+
+    public boolean getBoolean(String key) {
+        return getBoolean(ConfigFile.CONFIG, key);
+    }
+
+    public boolean getBoolean(ConfigFile configFile, String key) {
+        if (configCache.containsKey(configFile.getFilePath())) {
+            FileConfiguration config = configCache.get(configFile.getFilePath());
+            return config.getBoolean(key);
+        }
+        return false;
     }
 
     public Object get(String key) {
-        return get("config.yml", key);
+        return get(ConfigFile.CONFIG, key);
     }
 
-    public Object get(String fileName, String key) {
-        if (configCache.containsKey(fileName)) {
-            FileConfiguration config = configCache.get(fileName);
+    public Object get(ConfigFile configFile, String key) {
+        if (configCache.containsKey(configFile.getFilePath())) {
+            FileConfiguration config = configCache.get(configFile.getFilePath());
             return config.get(key);
         }
         return null;
     }
 
-    public void saveConfig(String fileName, FileConfiguration config) {
-        saveConfig(fileName, config, "");
+    public ConfigurationSection getConfigurationSection(ConfigFile configFile, String key) {
+        if (configCache.containsKey(configFile.getFilePath())) {
+            FileConfiguration config = configCache.get(configFile.getFilePath());
+            return config.getConfigurationSection(key);
+        }
+        return null;
     }
 
-    public void saveConfig(String fileName, FileConfiguration config, String subDirectory) {
-        File configFile = new File(pluginFolder + File.separator + subDirectory, fileName);
+    public void saveConfig(ConfigFile configFile, FileConfiguration config) {
+        saveConfig(configFile, config, configFile.getSubDirectory());
+    }
+
+    public void saveConfig(ConfigFile configFile, FileConfiguration config, String subDirectory) {
+        File configFileObject = new File(pluginFolder + File.separator + subDirectory, configFile.getFileName());
         try {
-            config.save(configFile);
-            loadConfigToCache(fileName, subDirectory);
+            config.save(configFileObject);
+            loadConfigToCache(configFile.getFileName(), subDirectory);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void deleteConfig(String fileName) {
-        deleteConfig(fileName, "");
+    public FileConfiguration getConfig(ConfigFile configFile) {
+        FileConfiguration config = configCache.get(configFile.getFilePath());
+        if (config == null) {
+            File configFileObject = new File(pluginFolder, configFile.getSubDirectory() + File.separator + configFile.getFileName());
+
+            File parentDir = configFileObject.getParentFile();
+            if (!parentDir.exists()) {
+                parentDir.mkdirs();
+            }
+
+            if (!configFileObject.exists()) {
+                try {
+                    configFileObject.createNewFile();
+                } catch (IOException e) {
+                    Bukkit.getLogger().warning("Impossibile creare il file di configurazione: " + configFileObject.getPath());
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            config = YamlConfiguration.loadConfiguration(configFileObject);
+            configCache.put(configFile.getFilePath(), config);
+        }
+        return config;
     }
 
-    public void deleteConfig(String fileName, String subDirectory) {
-        File configFile = new File(pluginFolder + File.separator + subDirectory, fileName);
-        if (configFile.exists()) {
-            configFile.delete();
-            configCache.remove(fileName);
+
+
+    public void deleteConfig(ConfigFile configFile) {
+        deleteConfig(configFile, configFile.getSubDirectory());
+    }
+
+    public void deleteConfig(ConfigFile configFile, String subDirectory) {
+        File configFileObject = new File(pluginFolder + File.separator + subDirectory, configFile.getFileName());
+        if (configFileObject.exists()) {
+            configFileObject.delete();
+            configCache.remove(configFile.getFilePath());
         }
     }
 
@@ -115,9 +168,9 @@ public class ConfigManager {
 
                 OutputStream outputStream = new FileOutputStream(targetFile);
                 byte[] buffer = new byte[1024];
-                int lenght;
-                while ((lenght = inputStream.read(buffer)) > 0) {
-                    outputStream.write(buffer, 0, lenght);
+                int length;
+                while ((length = inputStream.read(buffer)) > 0) {
+                    outputStream.write(buffer, 0, length);
                 }
 
                 inputStream.close();
@@ -128,7 +181,6 @@ public class ConfigManager {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
     }
 
@@ -147,48 +199,35 @@ public class ConfigManager {
         return fileNames;
     }
 
-    public boolean contains(String key) {
-        return contains("config.yml", key);
-    }
-
-    public boolean contains(String fileName, String key) {
-        if (configCache.containsKey(fileName)) {
-            FileConfiguration config = configCache.get(fileName);
+    public boolean contains(ConfigFile configFile, String key) {
+        if (configCache.containsKey(configFile.getFilePath())) {
+            FileConfiguration config = configCache.get(configFile.getFilePath());
             return config.contains(key);
         }
         return false;
     }
 
     public List<String> getList(String key) {
-        return getList("config.yml", key);
+        return getList(ConfigFile.CONFIG, key);
     }
 
-    public List<String> getList(String fileName, String key) {
-        if (configCache.containsKey(fileName)) {
-            FileConfiguration config = configCache.get(fileName);
+    public List<String> getList(ConfigFile configFile, String key) {
+        if (configCache.containsKey(configFile.getFilePath())) {
+            FileConfiguration config = configCache.get(configFile.getFilePath());
             return config.getStringList(key);
         }
         return new ArrayList<>();
     }
 
-    public void set(String key, Object value) {
-        set("config.yml", key, value);
-    }
-
-    public void set(String fileName, String key, Object value) {
+    public void set(ConfigFile configFile, String key, Object value) {
         FileConfiguration config;
-        if (configCache.containsKey(fileName)) {
-            config = configCache.get(fileName);
+        if (configCache.containsKey(configFile.getFilePath())) {
+            config = configCache.get(configFile.getFilePath());
         } else {
             config = new YamlConfiguration();
         }
         config.set(key, value);
-        saveConfig(fileName, config);
-    }
-
-    public void reloadConfigs() {
-        configCache.clear();
-        loadAllConfigsToCache(pluginFolder);
+        saveConfig(configFile, config);
     }
 
     public void printHelp(Player player) {
@@ -211,5 +250,9 @@ public class ConfigManager {
             ChatUtils.send(player, message);
         }
     }
-}
 
+    public void reloadConfigs() {
+        configCache.clear();
+        loadAllConfigsToCache(pluginFolder);
+    }
+}

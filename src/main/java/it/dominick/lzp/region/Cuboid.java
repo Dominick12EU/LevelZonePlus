@@ -1,9 +1,12 @@
 package it.dominick.lzp.region;
 
+import lombok.Getter;
 import org.bukkit.Location;
 
 public abstract class Cuboid {
+    @Getter
     protected Location min;
+    @Getter
     protected Location max;
     protected int minX;
     protected int minY;
@@ -27,14 +30,6 @@ public abstract class Cuboid {
         maxX = Math.max(point1.getBlockX(), point2.getBlockX());
         maxY = Math.max(point1.getBlockY(), point2.getBlockY());
         maxZ = Math.max(point1.getBlockZ(), point2.getBlockZ());
-    }
-
-    public Location getMin() {
-        return min;
-    }
-
-    public Location getMax() {
-        return max;
     }
 
     public Location getCenter() {
