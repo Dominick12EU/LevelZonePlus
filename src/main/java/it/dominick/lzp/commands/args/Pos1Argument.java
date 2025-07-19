@@ -6,10 +6,12 @@ import it.dominick.lzp.utils.ChatUtils;
 import it.dominick.lzp.utils.RNG;
 import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 public class Pos1Argument extends Argument {
 
+    private static final int MAX_DISTANCE = 20;
     private final RegionManager regionManager;
 
     public Pos1Argument(ConfigManager config, RegionManager regionManager) {
@@ -19,7 +21,10 @@ public class Pos1Argument extends Argument {
 
     @Override
     public void execute(Player player, String[] args) {
-        Location pos1 = player.getLocation();
+        Block target = player.getTargetBlockExact(MAX_DISTANCE);
+        if (target == null) return;
+
+        Location pos1 = target.getLocation();
         regionManager.setPlayerPos1(player, pos1);
         ChatUtils.send(player, config.getString("cmd.pos"), "%pos%", "1");
     }
