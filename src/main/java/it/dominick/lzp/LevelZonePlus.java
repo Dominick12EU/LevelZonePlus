@@ -2,19 +2,29 @@ package it.dominick.lzp;
 
 import it.dominick.lzp.commands.CmdLevelZone;
 import it.dominick.lzp.config.ConfigManager;
+import it.dominick.lzp.hook.worldguard.WorldGuardFlagRegistrar;
+import it.dominick.lzp.hook.worldguard.WorldGuardHookLoader;
 import it.dominick.lzp.listener.PlayerMoveListener;
 import it.dominick.lzp.listener.RegionJoinListener;
 import it.dominick.lzp.listener.RegionQuitListener;
-import it.dominick.lzp.region.CustomRegion;
 import it.dominick.lzp.region.manager.RegionManager;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class LevelZonePlus extends JavaPlugin {
+
+    @Override
+    public void onLoad() {
+        if (getServer().getPluginManager().getPlugin("WorldGuard") != null) {
+            getLogger().info("[LZP] WorldGuard found");
+            try {
+                WorldGuardFlagRegistrar.registerFlagsIfPossible();
+            } catch (Exception ex) {
+                getLogger().severe("[LZP] Error registry flag WG: " + ex.getMessage());
+            }
+        } else {
+            getLogger().info("[LZP] WorldGuard not found");
+        }
+    }
 
     @Override
     public void onEnable() {
@@ -27,8 +37,12 @@ public final class LevelZonePlus extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerMoveListener(regionManager), this);
         getServer().getPluginManager().registerEvents(new RegionJoinListener(), this);
         getServer().getPluginManager().registerEvents(new RegionQuitListener(), this);
-
         getCommand("lzp").setExecutor(new CmdLevelZone(configManager, regionManager));
+
+        if (getServer().getPluginManager().getPlugin("WorldGuard") != null) {
+            new WorldGuardHookLoader(this).initMovementListeners();
+            getLogger().info("[LZP] Hook WG enabled.");
+        }
     }
 
     @Override

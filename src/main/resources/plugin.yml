@@ -4,6 +4,10 @@ main: it.dominick.lzp.LevelZonePlus
 api-version: '1.13'
 authors: [Dominick12]
 
+softdepend:
+  - WorldGuard
+  - AlonsoLevels
+
 commands:
   lzp:
     aliases: ["lz", "levelzone", "levelzoneplus"]
