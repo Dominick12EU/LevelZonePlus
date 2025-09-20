@@ -25,7 +25,9 @@ public class ConfirmGUI {
             .setName(ChatUtils.color("Im Sure"))
             .asGuiItem(confirm -> {
                 regionManager.removeRegion(regionName);
-                new RegionsGUI(regionManager).open(player);
+                if (!regionManager.getRegions().isEmpty()) {
+                    new RegionsGUI(regionManager).open(player);
+                }
             })
         );
 
