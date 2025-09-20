@@ -1,7 +1,6 @@
 package it.dominick.lzp.commands;
 
 import com.google.common.collect.ImmutableList;
-import it.dominick.lzp.LevelZonePlus;
 import it.dominick.lzp.commands.args.*;
 import it.dominick.lzp.config.ConfigManager;
 import it.dominick.lzp.region.manager.RegionManager;

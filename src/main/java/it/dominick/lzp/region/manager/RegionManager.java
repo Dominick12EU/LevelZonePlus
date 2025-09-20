@@ -2,7 +2,6 @@ package it.dominick.lzp.region.manager;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import it.dominick.lzp.LevelZonePlus;
 import it.dominick.lzp.config.ConfigFile;
 import it.dominick.lzp.config.ConfigManager;

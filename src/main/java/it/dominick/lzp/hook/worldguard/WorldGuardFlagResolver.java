@@ -10,7 +10,8 @@ import com.sk89q.worldguard.protection.regions.RegionContainer;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public final class WorldGuardFlagResolver {

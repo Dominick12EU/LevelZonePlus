@@ -4,8 +4,6 @@ import it.dominick.lzp.LevelZonePlus;
 import it.dominick.lzp.hook.EntryHook;
 import it.dominick.lzp.hook.EntryHookFactory;
 import it.dominick.lzp.hook.HookType;
-import it.dominick.lzp.region.manager.RegionManager;
-import it.dominick.lzp.utils.ChatUtils;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

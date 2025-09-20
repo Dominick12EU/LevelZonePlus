@@ -1,9 +1,7 @@
 package it.dominick.lzp.listener;
 
-import it.dominick.lzp.event.RegionJoinEvent;
 import it.dominick.lzp.event.RegionQuitEvent;
 import it.dominick.lzp.region.CustomRegion;
-import it.dominick.lzp.region.manager.RegionManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

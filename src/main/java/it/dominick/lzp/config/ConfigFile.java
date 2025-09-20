@@ -1,7 +1,6 @@
 package it.dominick.lzp.config;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
 public class ConfigFile {

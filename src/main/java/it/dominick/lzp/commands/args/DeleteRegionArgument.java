@@ -3,7 +3,6 @@ package it.dominick.lzp.commands.args;
 import it.dominick.lzp.config.ConfigManager;
 import it.dominick.lzp.region.manager.RegionManager;
 import it.dominick.lzp.utils.ChatUtils;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public class DeleteRegionArgument extends Argument {

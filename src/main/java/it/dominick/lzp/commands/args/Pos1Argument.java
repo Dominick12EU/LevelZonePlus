@@ -3,9 +3,7 @@ package it.dominick.lzp.commands.args;
 import it.dominick.lzp.config.ConfigManager;
 import it.dominick.lzp.region.manager.RegionManager;
 import it.dominick.lzp.utils.ChatUtils;
-import it.dominick.lzp.utils.RNG;
 import org.bukkit.Location;
-import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
