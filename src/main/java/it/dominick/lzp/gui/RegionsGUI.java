@@ -3,6 +3,7 @@ package it.dominick.lzp.gui;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.Gui;
+import dev.triumphteam.gui.guis.GuiItem;
 import dev.triumphteam.gui.guis.PaginatedGui;
 import it.dominick.lzp.hook.worldguard.WorldGuardFlagResolver;
 import it.dominick.lzp.region.CustomRegion;
@@ -46,7 +47,27 @@ public class RegionsGUI {
             return;
         }
 
-        if (regions.isEmpty()) {
+        regionsGui.getFiller().fillBorder(ItemBuilder.from(Material.BLACK_STAINED_GLASS_PANE).asGuiItem());
+
+        GuiItem guiItemClose = ItemBuilder.from(Material.EMERALD).setName(ChatUtils.color("&4&lClose")).setLore(ChatUtils.color("&7Close the gui with a click")).asGuiItem(event -> {
+            regionsGui.close(player);
+        });
+        regionsGui.setItem(4, guiItemClose);
+
+        GuiItem guiItemNextPage = ItemBuilder.from(Material.SPECTRAL_ARROW).setName(ChatUtils.color("&a&lNext Page")).setLore(ChatUtils.color("&7Switch to the next page")).asGuiItem(event -> {
+            regionsGui.next();
+            regionsGui.update();
+        });
+
+        GuiItem guiItemPrevPage = ItemBuilder.from(Material.SPECTRAL_ARROW).setName(ChatUtils.color("&c&lPrevious Page")).setLore(ChatUtils.color("&7Switch to the previous page")).asGuiItem(event -> {
+            regionsGui.previous();
+            regionsGui.update();
+        });
+
+        regionsGui.setItem(48, guiItemPrevPage);
+
+
+        if (!regions.isEmpty()) {
             for (Map.Entry<String, CustomRegion> entry : regions.entrySet()) {
                 String regionName = entry.getKey();
                 CustomRegion region = entry.getValue();
@@ -117,6 +138,8 @@ public class RegionsGUI {
                 }));
             }
         }
+
+        regionsGui.setItem(50, guiItemNextPage);
 
         regionsGui.open(player);
     }
