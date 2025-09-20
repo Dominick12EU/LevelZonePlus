@@ -4,6 +4,7 @@ import it.dominick.lzp.LevelZonePlus;
 import it.dominick.lzp.hook.EntryHook;
 import it.dominick.lzp.hook.EntryHookFactory;
 import it.dominick.lzp.hook.HookType;
+import it.dominick.lzp.utils.ChatUtils;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -14,10 +15,23 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+
 @RequiredArgsConstructor
 public class WorldGuardMovementListener implements Listener {
 
     private final LevelZonePlus plugin;
+
+    private static final Map<HookType, Function<Location, Integer>> REQ_RESOLVERS = Map.of(
+            HookType.DEFAULT,      WorldGuardFlagResolver::resolveDefaultMinLevel,
+            HookType.ALONSOLEVELS, WorldGuardFlagResolver::resolveAlonsoMinLevel
+    );
+
+    private record Requirement(HookType type, int min) {}
+    private record KnockbackDecision(boolean allowed, Vector vector) {}
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onMove(PlayerMoveEvent e) {
@@ -45,29 +59,54 @@ public class WorldGuardMovementListener implements Listener {
     }
 
     private KnockbackDecision checkAndBuildKb(Player player, Location dest, Location from) {
-        Integer reqDefault = WorldGuardFlagResolver.resolveDefaultMinLevel(dest);
-        Integer reqAlonso  = WorldGuardFlagResolver.resolveAlonsoMinLevel(dest);
-
-        boolean okDefault = true;
-        boolean okAlonso  = true;
-
-        if (reqDefault != null) {
-            EntryHook defaultHook = EntryHookFactory.createHook(HookType.DEFAULT);
-            okDefault = defaultHook.isValid(plugin.getServer().getPluginManager())
-                    && defaultHook.canEnter(player, reqDefault);
-            if (!okDefault) sendDeny(player, "DEFAULT", reqDefault);
+        List<Requirement> reqs = resolveRequirements(dest);
+        if (reqs.isEmpty()) {
+            return new KnockbackDecision(true, new Vector());
         }
 
-        if (reqAlonso != null) {
-            EntryHook alonsoHook = EntryHookFactory.createHook(HookType.ALONSOLEVELS);
-            okAlonso = alonsoHook.isValid(plugin.getServer().getPluginManager())
-                    && alonsoHook.canEnter(player, reqAlonso);
-            if (!okAlonso) sendDeny(player, "ALONSOLEVELS", reqAlonso);
+        var pm = plugin.getServer().getPluginManager();
+        List<Requirement> failed = new ArrayList<>();
+
+        for (Requirement r : reqs) {
+            EntryHook hook = EntryHookFactory.createHook(r.type());
+            boolean ok = hook.isValid(pm) && hook.canEnter(player, r.min());
+            if (!ok) failed.add(r);
         }
 
-        boolean allowed = okDefault && okAlonso;
+        boolean allowed = failed.isEmpty();
+        if (!allowed) {
+            sendDenyAggregated(player, failed);
+        }
+
         Vector kb = allowed ? new Vector() : calculateKnockbackVector(from, dest);
         return new KnockbackDecision(allowed, kb);
+    }
+
+    private List<Requirement> resolveRequirements(Location dest) {
+        List<Requirement> out = new ArrayList<>();
+        for (var e : REQ_RESOLVERS.entrySet()) {
+            Integer min = e.getValue().apply(dest);
+            if (min != null) out.add(new Requirement(e.getKey(), min));
+        }
+        return out;
+    }
+
+    private void sendDenyAggregated(Player player, List<Requirement> failed) {
+        StringBuilder sb = new StringBuilder("{prefix} &cYou do not have the required level &8(");
+        for (int i = 0; i < failed.size(); i++) {
+            Requirement r = failed.get(i);
+            sb.append(displayName(r.type())).append(": &e").append(r.min()).append("&8");
+            if (i < failed.size() - 1) sb.append(", ");
+        }
+        sb.append(")&c.");
+        player.sendMessage(ChatUtils.color(ChatUtils.placeholder(sb.toString())));
+    }
+
+    private String displayName(HookType type) {
+        return switch (type) {
+            case DEFAULT      -> "DEFAULT";
+            case ALONSOLEVELS -> "ALONSOLEVELS";
+        };
     }
 
     private Vector calculateKnockbackVector(Location from, Location to) {
@@ -94,16 +133,10 @@ public class WorldGuardMovementListener implements Listener {
         return v.normalize().multiply(-1.0);
     }
 
-    private void sendDeny(Player player, String type, int req) {
-        player.sendMessage("WorldGuardBlock"); //TODO Change with real message
-    }
-
     private boolean sameBlock(Location a, Location b) {
         return a.getWorld() == b.getWorld()
                 && a.getBlockX() == b.getBlockX()
                 && a.getBlockY() == b.getBlockY()
                 && a.getBlockZ() == b.getBlockZ();
     }
-
-    private record KnockbackDecision(boolean allowed, Vector vector) {}
 }
