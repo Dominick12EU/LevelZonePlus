@@ -1,7 +1,5 @@
 package it.dominick.lzp.region.manager;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import it.dominick.lzp.LevelZonePlus;
 import it.dominick.lzp.config.ConfigFile;
 import it.dominick.lzp.config.ConfigManager;
@@ -10,7 +8,6 @@ import it.dominick.lzp.hook.EntryHookFactory;
 import it.dominick.lzp.hook.HookType;
 import it.dominick.lzp.region.CustomRegion;
 import it.dominick.lzp.region.RegionData;
-import it.dominick.lzp.utils.LocationAdapter;
 import it.dominick.lzp.utils.RNG;
 import lombok.Getter;
 import org.bukkit.Location;
@@ -31,7 +28,6 @@ public class RegionManager {
     private static final Map<Player, Location> playerPos2Map = new HashMap<>();
     private final File regionsFolder;
     private final ConfigManager configManager;
-    private final Gson gson;
     private final PluginManager pluginManager;
 
     public RegionManager(LevelZonePlus plugin) {
@@ -41,10 +37,6 @@ public class RegionManager {
         if (!regionsFolder.exists()) {
             regionsFolder.mkdirs();
         }
-        this.gson = new GsonBuilder().setPrettyPrinting()
-                .registerTypeAdapter(Location.class, new LocationAdapter())
-                .excludeFieldsWithoutExposeAnnotation()
-                .create();
         loadRegions();
     }
 
