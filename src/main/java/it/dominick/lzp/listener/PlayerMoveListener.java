@@ -32,7 +32,7 @@ public class PlayerMoveListener implements Listener {
 
         if (toRegion != null && toRegion != fromRegion && !toRegion.canEnter(player)) {
             toRegion.denyEntry(player);
-            player.setVelocity(toRegion.calculateKnockbackVector(from, to, regionManager));
+            player.setVelocity(toRegion.calculateKnockbackVector(from, to));
             return;
         }
 
@@ -46,7 +46,7 @@ public class PlayerMoveListener implements Listener {
 
             if (joinEvent.isCancelled()) {
                 toRegion.denyEntry(player);
-                player.setVelocity(toRegion.calculateKnockbackVector(from, to, regionManager));
+                player.setVelocity(toRegion.calculateKnockbackVector(from, to));
             }
         }
     }

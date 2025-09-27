@@ -45,7 +45,7 @@ public class CustomRegion extends Cuboid {
         player.sendMessage("Non hai abbastanza esperienza per entrare in questa regione!");
     }
 
-    public Vector calculateKnockbackVector(Location from, Location to, RegionManager regionSet) {
+    public Vector calculateKnockbackVector(Location from, Location to) {
         int changeX = to.getBlockX() - from.getBlockX();
         int changeY = to.getBlockY() - from.getBlockY();
         int changeZ = to.getBlockZ() - from.getBlockZ();
@@ -54,8 +54,8 @@ public class CustomRegion extends Cuboid {
             return null;
         }
 
-        boolean restrictedX = regionSet.getRegions().values().stream().allMatch(region -> region.contains(from.getBlockX() + changeX, from.getBlockY(), from.getBlockZ()));
-        boolean restrictedZ = regionSet.getRegions().values().stream().allMatch(region -> region.contains(from.getBlockX(), from.getBlockY(), from.getBlockZ() + changeZ));
+        boolean restrictedX = this.contains(from.getBlockX() + changeX, from.getBlockY(), from.getBlockZ());
+        boolean restrictedZ = this.contains(from.getBlockX(), from.getBlockY(), from.getBlockZ() + changeZ);
 
         double knockbackX = restrictedX ? Math.signum(changeX) : 0;
         double knockbackY = -0.5;
