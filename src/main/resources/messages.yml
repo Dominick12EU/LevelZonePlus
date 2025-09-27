@@ -6,6 +6,9 @@ global:
   no-region-found: "{prefix} &cThe region &4%region% &cwas not found"
 
 cmd:
+  wand:
+    given: "{prefix} &aYou have been given the region wand"
+    tooFar: "{prefix} &cYou are too far from the block"
   pos: "{prefix} &aPosition %pos% set successfully"
   delete: "{prefix} &aThe region &2%region% &ahas been removed"
   create:

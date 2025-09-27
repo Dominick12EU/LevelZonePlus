@@ -7,10 +7,16 @@ import it.dominick.lzp.hook.worldguard.WorldGuardHookLoader;
 import it.dominick.lzp.listener.PlayerMoveListener;
 import it.dominick.lzp.listener.RegionJoinListener;
 import it.dominick.lzp.listener.RegionQuitListener;
+import it.dominick.lzp.listener.SelectionListener;
 import it.dominick.lzp.region.manager.RegionManager;
+import lombok.Getter;
+import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class LevelZonePlus extends JavaPlugin {
+
+    @Getter
+    public static LevelZonePlus instance;
 
     @Override
     public void onLoad() {
@@ -28,6 +34,7 @@ public final class LevelZonePlus extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        instance = this;
         saveDefaultConfig();
         ConfigManager configManager = new ConfigManager(this);
         configManager.createAndCopyResource("messages.yml", "messages.yml");
@@ -37,6 +44,10 @@ public final class LevelZonePlus extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerMoveListener(regionManager), this);
         getServer().getPluginManager().registerEvents(new RegionJoinListener(), this);
         getServer().getPluginManager().registerEvents(new RegionQuitListener(), this);
+
+        getServer().getPluginManager().registerEvents(new SelectionListener(regionManager,
+                configManager, new NamespacedKey(this, "lzp_wand")), this);
+
         getCommand("lzp").setExecutor(new CmdLevelZone(configManager, regionManager));
 
         if (getServer().getPluginManager().getPlugin("WorldGuard") != null) {
