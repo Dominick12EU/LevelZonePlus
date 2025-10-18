@@ -29,8 +29,6 @@ public class CmdLevelZone implements TabExecutor {
         argumentMap.put("settings", new SettingsRegionArgument(config, region));
         argumentMap.put("create", new CreateRegionArgument(config, region));
         argumentMap.put("delete", new DeleteRegionArgument(config, region));
-        argumentMap.put("pos1", new Pos1Argument(config, region));
-        argumentMap.put("pos2", new Pos2Argument(config, region));
         argumentMap.put("wand", new WandArgument(config));
         argumentMap.put("help", new HelpArgument(config));
 
