@@ -234,7 +234,7 @@ public class ConfigManager {
         List<String> help = Arrays.asList(
                 // Main Gradient: #209966 #33F342 #67CB70
                 "&r",
-                " &#209966&lL&#23A860&le&#26B75A&lv&#2AC654&le&#2DD54E&ll&#30E448&lZ&#33F342&lo&#3CEC4A&ln&#44E651&le&#4DDF59&lP&#56D861&ll&#5ED268&lu&#67CB70&ls &7v" + plugin.getDescription().getVersion(),
+                " &#16925EL&#199E58e&#1CA952v&#20B54Ce&#23C045l&#26CC3FZ&#29D739o&#33D542n&#3ED34Be&#48D155P&#52CF5El&#5DCD67u&#67CB70s &7v" + plugin.getDescription().getVersion(),
                 "  &7By Dominick12",
                 "&r",
                 " &#209966&lC&#25B35C&lo&#2BCC51&lm&#30E647&lm&#3AED49&la&#49E256&ln&#58D663&ld&#67CB70&ls",
