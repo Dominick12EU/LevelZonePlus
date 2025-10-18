@@ -42,6 +42,6 @@ public class CreateRegionArgument extends Argument {
 
     @Override
     public int minimumArgs() {
-        return 1;
+        return 2;
     }
 }
