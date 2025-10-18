@@ -17,55 +17,61 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-import javax.swing.*;
+import java.util.EnumSet;
+import java.util.Set;
 
 @RequiredArgsConstructor
-public class SelectionListener implements Listener {
+public final class SelectionListener implements Listener {
 
-    private static final int MAX_DISTANCE = 20;
+    private static final int SELECTION_RANGE = 20;
+    private static final Set<Action> SUPPORTED_ACTIONS = EnumSet.of(
+            Action.LEFT_CLICK_BLOCK, Action.RIGHT_CLICK_BLOCK,
+            Action.LEFT_CLICK_AIR, Action.RIGHT_CLICK_AIR
+    );
 
     private final RegionManager regionManager;
     private final ConfigManager config;
     private final NamespacedKey wandKey;
 
-    private boolean isWand(ItemStack item) {
+    private boolean isWand(final ItemStack item) {
         if (item == null) return false;
-        ItemMeta meta = item.getItemMeta();
+        final ItemMeta meta = item.getItemMeta();
         if (meta == null) return false;
-        Byte flag = meta.getPersistentDataContainer().get(wandKey, PersistentDataType.BYTE);
-        return flag != null && flag == (byte) 1;
+        final Byte flag = meta.getPersistentDataContainer().get(wandKey, PersistentDataType.BYTE);
+        return Byte.valueOf((byte) 1).equals(flag);
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void onInteract(PlayerInteractEvent e) {
-        if (e.getHand() == EquipmentSlot.OFF_HAND) return;
+    public void onInteract(final PlayerInteractEvent event) {
+        if (event.getHand() == EquipmentSlot.OFF_HAND) return;
 
-        Player p = e.getPlayer();
-        ItemStack item = p.getInventory().getItemInMainHand();
-        if (!isWand(item)) return;
+        final Player player = event.getPlayer();
+        final ItemStack inHand = player.getInventory().getItemInMainHand();
+        if (!isWand(inHand)) return;
 
-        Action action = e.getAction();
-        if (action != Action.LEFT_CLICK_BLOCK && action != Action.RIGHT_CLICK_BLOCK
-                && action != Action.LEFT_CLICK_AIR && action != Action.RIGHT_CLICK_AIR) return;
+        final Action action = event.getAction();
+        if (!SUPPORTED_ACTIONS.contains(action)) return;
 
-        Block target = p.getTargetBlockExact(MAX_DISTANCE);
+        final Block target = player.getTargetBlockExact(SELECTION_RANGE);
         if (target == null) {
-            ChatUtils.send(p, config.getString("cmd.wand.tooFar"));
+            ChatUtils.send(player, config.getString("cmd.wand.tooFar"));
+            event.setCancelled(true);
+            return;
         }
 
         switch (action) {
             case LEFT_CLICK_BLOCK:
             case LEFT_CLICK_AIR:
-                regionManager.setPlayerPos1(p, target.getLocation());
-                ChatUtils.send(p, config.getString("cmd.pos"), "%pos%", "1");
-                e.setCancelled(true);
+                regionManager.setPlayerPos1(player, target.getLocation());
+                ChatUtils.send(player, config.getString("cmd.pos"), "%pos%", "1");
+                event.setCancelled(true);
                 break;
 
             case RIGHT_CLICK_BLOCK:
             case RIGHT_CLICK_AIR:
-                regionManager.setPlayerPos2(p, target.getLocation());
-                ChatUtils.send(p, config.getString("cmd.pos"), "%pos%", "2");
-                e.setCancelled(true);
+                regionManager.setPlayerPos2(player, target.getLocation());
+                ChatUtils.send(player, config.getString("cmd.pos"), "%pos%", "2");
+                event.setCancelled(true);
                 break;
 
             default:
